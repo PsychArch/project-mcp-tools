@@ -6,6 +6,7 @@ Edit file tool implementation
 from pathlib import Path
 from typing import Annotated
 from fastmcp import Context
+from . import validate_absolute_path
 
 
 async def edit_file(
@@ -25,6 +26,10 @@ Usage:
 - Only use emojis if the user explicitly requests it. Avoid adding emojis to files unless asked.
 - The edit will FAIL if `old_string` is not unique in the file. Either provide a larger string with more surrounding context to make it unique or use `replace_all` to change every instance of `old_string`. 
 - Use `replace_all` for replacing and renaming strings across the file. This parameter is useful if you want to rename a variable for instance."""
+    
+    # Validate absolute path
+    validate_absolute_path(file_path, "file editing")
+    
     await ctx.info(f"Editing file: {file_path}")
     
     if old_string == new_string:

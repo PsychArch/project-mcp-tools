@@ -5,11 +5,11 @@ description = "Collection of FastMCP tools for software project management and d
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-    "fastmcp>=2.10.0",
+    "fastmcp>=2.11.0",
 ]
 
 [project.scripts]
-mcp-tools = "server:main"
+project-mcp-tools = "server:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["tools"]

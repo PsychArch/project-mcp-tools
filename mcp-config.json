@@ -1,9 +1,0 @@
-{
-  "mcpServers": {
-    "unified-mcp-tools": {
-      "command": "python",
-      "args": ["server.py"],
-      "cwd": "/home/li/projects/project-mcp-tools"
-    }
-  }
-}

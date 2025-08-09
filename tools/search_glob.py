@@ -12,19 +12,23 @@ from fastmcp import Context
 async def search_glob(
     pattern: Annotated[str, "The glob pattern to match files against"],
     path: Annotated[Optional[str], "The directory to search in. If not specified, the current working directory will be used. IMPORTANT: Omit this field to use the default directory. DO NOT enter \"undefined\" or \"null\" - simply omit it for the default behavior. Must be a valid directory path if provided."] = None,
-    ctx: Context = None
+    *,
+    ctx: Context
 ) -> str:
     """- Fast file pattern matching tool that works with any codebase size
 - Supports glob patterns like \"**/*.js\" or \"src/**/*.ts\"
 - Returns matching file paths sorted by modification time
 - Use this tool when you need to find files by name patterns
-- When you are doing an open ended search that may require multiple rounds of globbing and grepping, use the Agent tool instead
-- You have the capability to call multiple tools in a single response. It is always better to speculatively perform multiple searches as a batch that are potentially useful."""
+- It is always better to speculatively perform multiple searches as a batch that are potentially useful."""
+    await ctx.info(f"Searching for files matching pattern: {pattern}")
+    
     try:
         search_path = path if path else os.getcwd()
         
         if not os.path.exists(search_path):
-            return f"Error: Directory '{search_path}' does not exist"
+            error_msg = f"Directory '{search_path}' does not exist"
+            await ctx.error(error_msg)
+            return f"Error: {error_msg}"
         
         original_cwd = os.getcwd()
         try:
@@ -45,18 +49,21 @@ async def search_glob(
             absolute_matches.sort(key=lambda x: os.path.getmtime(x), reverse=True)
             
             if not absolute_matches:
-                return f"No files found matching pattern '{pattern}' in '{search_path}'"
+                msg = f"No files found matching pattern '{pattern}' in '{search_path}'"
+                await ctx.info(msg)
+                return msg
             
             result_lines = []
             for file_path in absolute_matches:
                 result_lines.append(file_path)
             
+            await ctx.info(f"Found {len(absolute_matches)} matching files")
             return "\n".join(result_lines)
             
         finally:
             os.chdir(original_cwd)
             
     except Exception as e:
-        if ctx:
-            await ctx.error(f"Error in search_glob: {str(e)}")
-        return f"Error: {str(e)}"
+        error_msg = f"Error in search_glob: {str(e)}"
+        await ctx.error(error_msg)
+        raise

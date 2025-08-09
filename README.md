@@ -1,17 +1,34 @@
 # Project MCP Tools
 
-FastMCP tools for software project management with unified single executable entry point.
+[![PyPI](https://img.shields.io/pypi/v/project-mcp-tools.svg)](https://pypi.org/project/project-mcp-tools/)
+
+MCP tools for software project development.
+
+## Installation & Usage
+
+Add to your MCP configuration:
+
+```json
+{
+  "mcpServers": {
+    "project-mcp-tools": {
+      "command": "uvx",
+      "args": ["project-mcp-tools"]
+    }
+  }
+}
+```
 
 ## Available Tools
 
-### File Edit Tools
+### File Operations
 - `edit_file` - String replacements in files
+- `multi_edit_file` - Multiple edits to a single file in one operation
 - `read_file` - Read files with line numbers
-- `write_file` - Write content to files  
+- `write_file` - Write content to files
 - `list_files` - List files and directories
 
-### Search Glob Tools
+### Search Tools
 - `search_glob` - File pattern matching with glob patterns
-
-### Grep Tools
 - `grep` - Content search with regular expressions
+
