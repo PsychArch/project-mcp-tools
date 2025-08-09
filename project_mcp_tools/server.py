@@ -6,13 +6,13 @@ A single executable entry point providing all MCP tools.
 """
 
 from fastmcp import FastMCP
-from tools.edit_file import edit_file
-from tools.multi_edit_file import multi_edit_file
-from tools.read_file import read_file
-from tools.write_file import write_file
-from tools.list_files import list_files
-from tools.search_glob import search_glob
-from tools.grep import grep
+from .tools.edit_file import edit_file
+from .tools.multi_edit_file import multi_edit_file
+from .tools.read_file import read_file
+from .tools.write_file import write_file
+from .tools.list_files import list_files
+from .tools.search_glob import search_glob
+from .tools.grep import grep
 
 
 def create_server() -> FastMCP:
