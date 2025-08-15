@@ -8,6 +8,7 @@ import mimetypes
 from pathlib import Path
 from typing import Annotated, Union, List, Dict, Any
 from fastmcp import Context
+from .session_manager import session_manager
 
 
 def _is_binary_file(file_path: Path) -> bool:
@@ -174,11 +175,9 @@ Usage:
             await ctx.error(error_msg)
             raise ValueError(error_msg)
         
-        # Track this file as read in context state
-        read_files = ctx.get_state("read_files") or set()
-        read_files.add(file_path)
-        ctx.set_state("read_files", read_files)
-        await ctx.info(f"Tracking {file_path} as read")
+        # Track this file as read in session state
+        session_manager.add_read_file(ctx.session_id, file_path)
+        await ctx.info(f"Tracking {file_path} as read in session {ctx.session_id}")
         
         # Check file size and warn if large
         file_size = path.stat().st_size

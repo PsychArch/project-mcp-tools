@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Annotated
 from fastmcp import Context
 from . import validate_absolute_path
+from .session_manager import session_manager
 
 
 async def edit_file(
@@ -29,6 +30,12 @@ Usage:
     
     # Validate absolute path
     validate_absolute_path(file_path, "file editing")
+    
+    # Check if file was previously read (Read-before-Edit validation)
+    if not session_manager.is_file_read(ctx.session_id, file_path):
+        error_msg = f"Must read {file_path} before editing. Use read_file tool first."
+        await ctx.error(error_msg)
+        raise ValueError(error_msg)
     
     await ctx.info(f"Editing file: {file_path}")
     

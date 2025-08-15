@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Annotated, List, Dict, Any
 from fastmcp import Context
 from . import validate_absolute_path
+from .session_manager import session_manager
 
 
 async def multi_edit_file(
@@ -59,6 +60,12 @@ If you want to create a new file, use:
     
     # Validate absolute path
     validate_absolute_path(file_path, "multi-edit file operation")
+    
+    # Check if file was previously read (Read-before-Edit validation)
+    if not session_manager.is_file_read(ctx.session_id, file_path):
+        error_msg = f"Must read {file_path} before editing. Use read_file tool first."
+        await ctx.error(error_msg)
+        raise ValueError(error_msg)
     
     await ctx.info(f"Performing multi-edit on file: {file_path}")
     
